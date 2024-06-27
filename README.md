@@ -1,4 +1,5 @@
 Automated Calibration of Electrical Quantities with Fluke 5560A
+
 This project implements an automated system for the calibration of various electrical  using the Fluke 5560A calibrator, through IEEE-488 protocol. The application allows for automated calibration of voltage and current sources and meters, as well as resistors and capacitors, among others, with results stored in an Excel spreadsheet.
 
 Features
