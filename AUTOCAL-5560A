@@ -1,0 +1,478 @@
+# -*- coding: utf-8 -*-
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+import pyvisa
+import time
+from openpyxl import load_workbook
+
+# Funções de medição
+def medir_fonte_tensao_ac(calibrator, points):
+    results = []
+    for point in points:
+        voltages = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}V')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:VOLTAGE:AC?')
+            voltages.append(float(reading))
+        avg_voltage = sum(voltages) / len(voltages)
+        results.append(avg_voltage)
+    return results
+
+def medir_medidor_corrente_ac(calibrator, points):
+    results = []
+    for point in points:
+        currents = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}mA')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CURRENT:AC?')
+            currents.append(float(reading))
+        avg_current = sum(currents) / len(currents)
+        results.append(avg_current)
+    return results
+
+def medir_fonte_corrente_ac(calibrator, points):
+    results = []
+    for point in points:
+        currents = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}mA')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CURRENT:AC?')
+            currents.append(float(reading))
+        avg_current = sum(currents) / len(currents)
+        results.append(avg_current)
+    return results
+
+def medir_medidor_tensao_dc(calibrator, points):
+    results = []
+    for point in points:
+        voltages = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}V')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:VOLTAGE:DC?')
+            voltages.append(float(reading))
+        avg_voltage = sum(voltages) / len(voltages)
+        results.append(avg_voltage)
+    return results
+
+def medir_fonte_tensao_dc(calibrator, points):
+    results = []
+    for point in points:
+        voltages = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}V')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:VOLTAGE:DC?')
+            voltages.append(float(reading))
+        avg_voltage = sum(voltages) / len(voltages)
+        results.append(avg_voltage)
+    return results
+
+def medir_medidor_corrente_dc(calibrator, points):
+    results = []
+    for point in points:
+        currents = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}mA')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CURRENT:DC?')
+            currents.append(float(reading))
+        avg_current = sum(currents) / len(currents)
+        results.append(avg_current)
+    return results
+
+def medir_fonte_corrente_dc(calibrator, points):
+    results = []
+    for point in points:
+        currents = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}mA')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CURRENT:DC?')
+            currents.append(float(reading))
+        avg_current = sum(currents) / len(currents)
+        results.append(avg_current)
+    return results
+
+def medir_medidor_resistencia_ca(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:AC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_resistor_padrao_ca(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:AC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_decada_resistiva_ca(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY AC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:AC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_medidor_resistencia_cc(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:DC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_resistor_padrao_cc(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:DC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_decada_resistiva_cc(calibrator, points):
+    results = []
+    for point in points:
+        resistances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}Ohm')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:RESISTANCE:DC?')
+            resistances.append(float(reading))
+        avg_resistance = sum(resistances) / len(resistances)
+        results.append(avg_resistance)
+    return results
+
+def medir_shunt_corrente_cc(calibrator, points):
+    results = []
+    for point in points:
+        currents = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY DC {point}mA')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CURRENT:DC?')
+            currents.append(float(reading))
+        avg_current = sum(currents) / len(currents)
+        results.append(avg_current)
+    return results
+
+def medir_medidor_capacitancia(calibrator, points):
+    results = []
+    for point in points:
+        capacitances = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY CAP {point}uF')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:CAPACITANCE?')
+            capacitances.append(float(reading))
+        avg_capacitance = sum(capacitances) / len(capacitances)
+        results.append(avg_capacitance)
+    return results
+
+def medir_medidor_potencia_ativa(calibrator, points):
+    results = []
+    for point in points:
+        powers = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY POWER {point}W')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:POWER:ACTIVE?')
+            powers.append(float(reading))
+        avg_power = sum(powers) / len(powers)
+        results.append(avg_power)
+    return results
+
+def medir_medidor_potencia_reativa(calibrator, points):
+    results = []
+    for point in points:
+        powers = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY POWER {point}var')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:POWER:REACTIVE?')
+            powers.append(float(reading))
+        avg_power = sum(powers) / len(powers)
+        results.append(avg_power)
+    return results
+
+def medir_fonte_potencia_ac(calibrator, points):
+    results = []
+    for point in points:
+        powers = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY POWER {point}W')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:POWER:ACTIVE?')
+            powers.append(float(reading))
+        avg_power = sum(powers) / len(powers)
+        results.append(avg_power)
+    return results
+
+def medir_medidor_angulo_fase(calibrator, points):
+    results = []
+    for point in points:
+        angles = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY PHASE {point}deg')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:PHASE?')
+            angles.append(float(reading))
+        avg_angle = sum(angles) / len(angles)
+        results.append(avg_angle)
+    return results
+
+def medir_medidor_cos(calibrator, points):
+    results = []
+    for point in points:
+        cos_values = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY COS {point}')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:COS?')
+            cos_values.append(float(reading))
+        avg_cos = sum(cos_values) / len(cos_values)
+        results.append(avg_cos)
+    return results
+
+def medir_medidor_potencia_dc(calibrator, points):
+    results = []
+    for point in points:
+        powers = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY POWER {point}W')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:POWER:DC?')
+            powers.append(float(reading))
+        avg_power = sum(powers) / len(powers)
+        results.append(avg_power)
+    return results
+
+def medir_fonte_potencia_dc(calibrator, points):
+    results = []
+    for point in points:
+        powers = []
+        for _ in range(4):  # Realiza 4 leituras
+            calibrator.write(f'APPLY POWER {point}W')
+            time.sleep(1)  # Aguarda para estabilização
+            reading = calibrator.query('MEASURE:POWER:DC?')
+            powers.append(float(reading))
+        avg_power = sum(powers) / len(powers)
+        results.append(avg_power)
+    return results
+
+# Função para calcular o erro em relação ao padrão do calibrador
+def calcular_erro(points, measurements):
+    erros = []
+    for point, measurement in zip(points, measurements):
+        erro = abs(point - measurement)
+        erros.append(erro)
+    return erros
+
+# Função para salvar os resultados em uma planilha existente
+def salvar_resultados(file_path, sheet_name, points, measurements, erros):
+    wb = load_workbook(file_path)
+    ws = wb[sheet_name]
+    start_row = 2  # A linha onde os resultados serão adicionados
+    for i, (point, measurement, erro) in enumerate(zip(points, measurements, erros), start=start_row):
+        ws[f'A{i}'] = point
+        ws[f'B{i}'] = measurement
+        ws[f'C{i}'] = erro
+    wb.save(file_path)
+
+# Função principal para realizar a calibração
+def calibrar():
+    rm = pyvisa.ResourceManager()
+    calibrator = rm.open_resource('GPIB::11::INSTR')
+    points = list(map(float, points_entry.get().split(',')))
+    
+    grandeza = grandeza_selecionada.get()
+    if grandeza == 'Medidor de Tensão DC':
+        measurements = medir_medidor_tensao_dc(calibrator, points)
+    elif grandeza == 'Fonte de Tensão DC':
+        measurements = medir_fonte_tensao_dc(calibrator, points)
+    elif grandeza == 'Medidor de Corrente DC':
+        measurements = medir_medidor_corrente_dc(calibrator, points)
+    elif grandeza == 'Fonte de Corrente DC':
+        measurements = medir_fonte_corrente_dc(calibrator, points)
+    elif grandeza == 'Fonte de Tensão AC':
+        measurements = medir_fonte_tensao_ac(calibrator, points)
+    elif grandeza == 'Medidor de Corrente AC':
+        measurements = medir_medidor_corrente_ac(calibrator, points)
+    elif grandeza == 'Fonte de Corrente AC':
+        measurements = medir_fonte_corrente_ac(calibrator, points)
+    elif grandeza == 'Medidor de Resistência em CA':
+        measurements = medir_medidor_resistencia_ca(calibrator, points)
+    elif grandeza == 'Resistor Padrão em CA':
+        measurements = medir_resistor_padrao_ca(calibrator, points)
+    elif grandeza == 'Década Resistiva em CA':
+        measurements = medir_decada_resistiva_ca(calibrator, points)
+    elif grandeza == 'Medidor de Resistência em CC':
+        measurements = medir_medidor_resistencia_cc(calibrator, points)
+    elif grandeza == 'Resistor Padrão em CC':
+        measurements = medir_resistor_padrao_cc(calibrator, points)
+    elif grandeza == 'Década Resistiva em CC':
+        measurements = medir_decada_resistiva_cc(calibrator, points)
+    elif grandeza == 'Shunt de Corrente CC':
+        measurements = medir_shunt_corrente_cc(calibrator, points)
+    elif grandeza == 'Medidor de Capacitância':
+        measurements = medir_medidor_capacitancia(calibrator, points)
+    elif grandeza == 'Medidor de Potência Ativa':
+        measurements = medir_medidor_potencia_ativa(calibrator, points)
+    elif grandeza == 'Medidor de Potência Reativa':
+        measurements = medir_medidor_potencia_reativa(calibrator, points)
+    elif grandeza == 'Fonte de Potência AC':
+        measurements = medir_fonte_potencia_ac(calibrator, points)
+    elif grandeza == 'Medidor de Ângulo de Fase':
+        measurements = medir_medidor_angulo_fase(calibrator, points)
+    elif grandeza == 'Medidor de cos φ':
+        measurements = medir_medidor_cos(calibrator, points)
+    elif grandeza == 'Medidor de Potência DC':
+        measurements = medir_medidor_potencia_dc(calibrator, points)
+    elif grandeza == 'Fonte de Potência DC':
+        measurements = medir_fonte_potencia_dc(calibrator, points)
+    else:
+        messagebox.showerror("Erro", "Grandeza não implementada.")
+        return
+
+    erros = calcular_erro(points, measurements)
+    salvar_resultados(file_path, sheet_name, points, measurements, erros)
+    result_message = f'Medições: {measurements}\nErros: {erros}'
+    messagebox.showinfo("Resultados", result_message)
+
+# Função para atualizar a unidade da grandeza na interface
+def atualizar_unidade_grandeza(*args):
+    grandeza = grandeza_selecionada.get()
+    if grandeza in ['Medidor de Tensão DC', 'Fonte de Tensão DC', 'Fonte de Tensão AC']:
+        unidade_label.config(text="(V)")
+    elif grandeza in ['Medidor de Corrente DC', 'Fonte de Corrente DC', 'Medidor de Corrente AC', 'Fonte de Corrente AC']:
+        unidade_label.config(text="(mA)")
+    elif grandeza in ['Medidor de Resistência em CA', 'Resistor Padrão em CA', 'Década Resistiva em CA', 
+                      'Medidor de Resistência em CC', 'Resistor Padrão em CC', 'Década Resistiva em CC']:
+        unidade_label.config(text="(Ω)")
+    elif grandeza == 'Shunt de Corrente CC':
+        unidade_label.config(text="(A)")
+    elif grandeza == 'Medidor de Capacitância':
+        unidade_label.config(text="(F)")
+    elif grandeza in ['Medidor de Potência Ativa', 'Medidor de Potência Reativa', 'Fonte de Potência AC', 'Medidor de Potência DC', 'Fonte de Potência DC']:
+        unidade_label.config(text="(W)")
+    elif grandeza == 'Medidor de Ângulo de Fase':
+        unidade_label.config(text="(°)")
+    elif grandeza == 'Medidor de cos φ':
+        unidade_label.config(text="")
+    else:
+        unidade_label.config(text="")
+
+# Função para configurar a interface gráfica
+def configurar_interface():
+    global points_entry, file_path_entry, sheet_name_entry, grandeza_selecionada, unidade_label
+
+    root = tk.Tk()
+    root.title("Calibração Elétrica - 5560A")
+    root.geometry("500x400")
+
+    # Configurações de estilos
+    style = ttk.Style()
+    style.configure('TButton', font=('Helvetica', 12), foreground='blue',background='#ededed')
+    style.configure('TLabel', font=('Helvetica', 12))
+    style.configure('TEntry', font=('Helvetica', 12))
+
+    # Frame para a seleção da grandeza
+    frame_grandeza = ttk.Frame(root, padding="10 10 10 10")
+    frame_grandeza.grid(column=0, row=0, columnspan=2, sticky=(tk.W, tk.E))
+
+    ttk.Label(frame_grandeza, text="                                           Grandeza:").grid(column=0, row=0, sticky=tk.W)
+    grandeza_selecionada = tk.StringVar()
+    grandeza_selecionada.trace('w', atualizar_unidade_grandeza)
+    grandeza_combobox = ttk.Combobox(frame_grandeza, textvariable=grandeza_selecionada, values=[
+        "Fonte de Tensão AC", "Medidor de Corrente AC", "Fonte de Corrente AC", 
+        "Medidor de Tensão DC", "Fonte de Tensão DC", "Medidor de Corrente DC", "Fonte de Corrente DC", 
+        "Medidor de Resistência em CA", "Resistor Padrão em CA", "Década Resistiva em CA",
+        "Medidor de Resistência em CC", "Resistor Padrão em CC", "Década Resistiva em CC",
+        "Shunt de Corrente CC", "Medidor de Capacitância", "Medidor de Potência Ativa", 
+        "Medidor de Potência Reativa", "Fonte de Potência AC", "Medidor de Ângulo de Fase",
+        "Medidor de cos φ", "Medidor de Potência DC", "Fonte de Potência DC"], state="readonly", style='TCombobox')
+    grandeza_combobox.grid(column=1, row=0, sticky=(tk.W, tk.E))
+    grandeza_combobox.current(0)  # Define o padrão
+
+    # Frame para a entrada de pontos
+    frame_pontos = ttk.Frame(root, padding="10 10 10 10")
+    frame_pontos.grid(column=0, row=1, columnspan=2, sticky=(tk.W, tk.E))
+
+    pontos_label_frame = ttk.Frame(frame_pontos)
+    pontos_label_frame.grid(column=0, row=0, columnspan=2, sticky=(tk.W, tk.E))
+
+    ttk.Label(pontos_label_frame, text="Pontos de Medição").grid(column=0, row=0, sticky=tk.W)
+    unidade_label = ttk.Label(pontos_label_frame, text="(V)")
+    unidade_label.grid(column=1, row=0, sticky=tk.W)
+
+    points_entry = ttk.Entry(frame_pontos, width=30)
+    points_entry.grid(column=0, row=1, columnspan=2, sticky=(tk.W, tk.E))
+
+    # Frame para a entrada do caminho do arquivo
+    frame_arquivo = ttk.Frame(root, padding="10 10 10 10")
+    frame_arquivo.grid(column=0, row=2, columnspan=2, sticky=(tk.W, tk.E))
+
+    ttk.Label(frame_arquivo, text="Caminho do Arquivo:").grid(column=0, row=0, sticky=tk.W)
+    file_path_entry = ttk.Entry(frame_arquivo, width=30)
+    file_path_entry.grid(column=0, row=1, columnspan=2, sticky=(tk.W, tk.E))
+
+    # Frame para a entrada do nome da planilha
+    frame_planilha = ttk.Frame(root, padding="10 10 10 10")
+    frame_planilha.grid(column=0, row=3, columnspan=2, sticky=(tk.W, tk.E))
+
+    ttk.Label(frame_planilha, text="Nome da Planilha:").grid(column=0, row=0, sticky=tk.W)
+    sheet_name_entry = ttk.Entry(frame_planilha, width=30)
+    sheet_name_entry.grid(column=0, row=1, columnspan=2, sticky=(tk.W, tk.E))
+
+    # Botão para iniciar a calibração
+    frame_botao = ttk.Frame(root, padding="10 10 10 10")
+    frame_botao.grid(column=0, row=4, columnspan=2, sticky=(tk.W, tk.E))
+    
+    btn_calibrar = ttk.Button(frame_botao, text="Calibrar", command=calibrar)
+    btn_calibrar.grid(column=1, row=0, sticky=tk.E)
+    btn_sair = ttk.Button(frame_botao, text="Sair", command=quit)
+    btn_sair.grid(column=3, row=0, sticky=tk.E)
+
+    root.columnconfigure(0, weight=1)
+    root.columnconfigure(1, weight=1)
+    root.mainloop()
+
+# Variáveis globais para o caminho do arquivo e nome da planilha
+file_path = 'path_to_your_existing_excel_file.xlsx'
+sheet_name = 'Sheet1'
+
+# Configurar a interface gráfica
+configurar_interface()
